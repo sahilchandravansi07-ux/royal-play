@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROYAL PLAY</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #080d19;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 25px 15px;
+  text-align: center;
+  background: linear-gradient(135deg,#171b38,#542b83);
+}
+
+header h1 {
+  color: #ffd76a;
+  font-size: 32px;
+  letter-spacing: 3px;
+}
+
+header p {
+  margin-top: 8px;
+  color: #ddd;
+}
+
+.container {
+  padding: 20px;
+}
+
+.welcome {
+  padding: 25px;
+  background: #151d32;
+  border-radius: 18px;
+  margin-bottom: 25px;
+}
+
+.welcome h2 {
+  color: #ffd76a;
+  margin-bottom: 10px;
+}
+
+.games {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.card {
+  background: linear-gradient(145deg,#222c49,#12192a);
+  border: 1px solid #384568;
+  border-radius: 18px;
+  padding: 25px 10px;
+  text-align: center;
+}
+
+.card .icon {
+  font-size: 45px;
+}
+
+.card h3 {
+  margin-top: 12px;
+  color: #ffd76a;
+}
+
+button {
+  background: linear-gradient(90deg,#e7ae35,#ffe18a);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #888;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>ROYAL PLAY</h1>
+  <p>Play • Connect • Compete</p>
+</header>
+
+<div class="container">
+
+  <div class="welcome">
+    <h2>Welcome to Royal Play 👑</h2>
+    <p>Your Ultimate Gaming World Starts Here!</p>
+  </div>
+
+  <h2 style="margin-bottom:18px;">🎮 Choose Your Game</h2>
+
+  <div class="games">
+
+    <div class="card">
+      <div class="icon">🎯</div>
+      <h3>Carrom</h3>
+      <button onclick="alert('Carrom Coming Soon!')">
+      Play Now
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="icon">🎲</div>
+      <h3>Ludo</h3>
+      <button onclick="alert('Ludo Coming Soon!')">
+      Play Now
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="icon">👥</div>
+      <h3>Friends</h3>
+      <button onclick="alert('Friends Coming Soon!')">
+      Explore
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="icon">🏆</div>
+      <h3>Leaderboard</h3>
+      <button onclick="alert('Leaderboard Coming Soon!')">
+      Explore
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  © 2026 ROYAL PLAY
+  <p>Made for Gaming Lovers</p>
+</footer>
+
+</body>
+</html>
