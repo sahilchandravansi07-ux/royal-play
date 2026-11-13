@@ -2,152 +2,267 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROYAL PLAY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royal Play Carrom</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  background: #080d19;
+  margin: 0;
+  background: #101522;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
+  text-align: center;
 }
 
 header {
-  padding: 25px 15px;
-  text-align: center;
-  background: linear-gradient(135deg,#171b38,#542b83);
+  padding: 18px;
+  background: linear-gradient(90deg,#39205f,#a16a24);
+  color: gold;
+  font-size: 25px;
+  font-weight: bold;
 }
 
-header h1 {
-  color: #ffd76a;
-  font-size: 32px;
-  letter-spacing: 3px;
-}
+h3 { color: gold; }
 
-header p {
-  margin-top: 8px;
-  color: #ddd;
-}
-
-.container {
-  padding: 20px;
-}
-
-.welcome {
-  padding: 25px;
-  background: #151d32;
-  border-radius: 18px;
-  margin-bottom: 25px;
-}
-
-.welcome h2 {
-  color: #ffd76a;
-  margin-bottom: 10px;
-}
-
-.games {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.card {
-  background: linear-gradient(145deg,#222c49,#12192a);
-  border: 1px solid #384568;
-  border-radius: 18px;
-  padding: 25px 10px;
-  text-align: center;
-}
-
-.card .icon {
-  font-size: 45px;
-}
-
-.card h3 {
-  margin-top: 12px;
-  color: #ffd76a;
+canvas {
+  width: 92vw;
+  max-width: 440px;
+  height: auto;
+  background: #d6a66a;
+  border: 8px solid #8b5527;
+  border-radius: 10px;
+  touch-action: none;
 }
 
 button {
-  background: linear-gradient(90deg,#e7ae35,#ffe18a);
+  padding: 13px 25px;
+  margin: 12px;
+  background: gold;
   border: none;
-  padding: 12px 25px;
   border-radius: 25px;
   font-weight: bold;
-  margin-top: 15px;
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #888;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>ROYAL PLAY</h1>
-  <p>Play • Connect • Compete</p>
-</header>
+<header>👑 ROYAL PLAY</header>
 
-<div class="container">
+<h3>🎯 CARROM GAME</h3>
+<p>Striker को पीछे खींचकर छोड़ें।</p>
 
-  <div class="welcome">
-    <h2>Welcome to Royal Play 👑</h2>
-    <p>Your Ultimate Gaming World Starts Here!</p>
-  </div>
+<canvas id="board" width="360" height="360"></canvas>
 
-  <h2 style="margin-bottom:18px;">🎮 Choose Your Game</h2>
+<h3 id="score">Score: 0</h3>
+<p id="status">Your Turn</p>
 
-  <div class="games">
+<button onclick="resetGame()">RESTART GAME</button>
 
-    <div class="card">
-      <div class="icon">🎯</div>
-      <h3>Carrom</h3>
-      <button onclick="alert('Carrom Coming Soon!')">
-      Play Now
-      </button>
-    </div>
+<script>
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
 
-    <div class="card">
-      <div class="icon">🎲</div>
-      <h3>Ludo</h3>
-      <button onclick="alert('Ludo Coming Soon!')">
-      Play Now
-      </button>
-    </div>
+let pieces = [];
+let score = 0;
+let striker;
+let dragging = false;
+let aim = {x:0,y:0};
 
-    <div class="card">
-      <div class="icon">👥</div>
-      <h3>Friends</h3>
-      <button onclick="alert('Friends Coming Soon!')">
-      Explore
-      </button>
-    </div>
+function piece(x,y,r,color,type) {
+ return {x,y,vx:0,vy:0,r,color,type};
+}
 
-    <div class="card">
-      <div class="icon">🏆</div>
-      <h3>Leaderboard</h3>
-      <button onclick="alert('Leaderboard Coming Soon!')">
-      Explore
-      </button>
-    </div>
+function resetGame() {
+ pieces = [];
+ score = 0;
 
-  </div>
-</div>
+ striker = piece(180,310,11,"#222","striker");
 
-<footer>
-  © 2026 ROYAL PLAY
-  <p>Made for Gaming Lovers</p>
-</footer>
+ pieces.push(striker);
+
+ pieces.push(piece(180,180,9,"red","queen"));
+
+ for(let i=0;i<8;i++){
+   let a=i*Math.PI/4;
+   pieces.push(piece(
+     180+22*Math.cos(a),
+     180+22*Math.sin(a),
+     8,
+     i%2===0?"white":"black",
+     "coin"
+   ));
+ }
+
+ document.getElementById("score").innerText="Score: 0";
+ document.getElementById("status").innerText="Your Turn";
+}
+
+function draw() {
+ ctx.clearRect(0,0,360,360);
+
+ ctx.fillStyle="#d6a66a";
+ ctx.fillRect(0,0,360,360);
+
+ ctx.strokeStyle="#653b1d";
+ ctx.lineWidth=3;
+ ctx.strokeRect(28,28,304,304);
+
+ ctx.beginPath();
+ ctx.arc(180,180,38,0,Math.PI*2);
+ ctx.stroke();
+
+ [[20,20],[340,20],[20,340],[340,340]].forEach(p=>{
+   ctx.beginPath();
+   ctx.fillStyle="#171717";
+   ctx.arc(p[0],p[1],17,0,Math.PI*2);
+   ctx.fill();
+ });
+
+ ctx.strokeStyle="#713f1b";
+ ctx.lineWidth=3;
+ ctx.beginPath();
+ ctx.moveTo(65,310);
+ ctx.lineTo(295,310);
+ ctx.stroke();
+
+ if(dragging) {
+   ctx.beginPath();
+   ctx.strokeStyle="blue";
+   ctx.lineWidth=2;
+   ctx.moveTo(striker.x,striker.y);
+   ctx.lineTo(aim.x,aim.y);
+   ctx.stroke();
+ }
+
+ pieces.forEach(p=>{
+   ctx.beginPath();
+   ctx.fillStyle=p.color;
+   ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+   ctx.fill();
+
+   ctx.strokeStyle="#54331b";
+   ctx.stroke();
+ });
+
+ requestAnimationFrame(draw);
+}
+
+function update() {
+ pieces.forEach(p=>{
+   p.x+=p.vx;
+   p.y+=p.vy;
+
+   p.vx*=0.985;
+   p.vy*=0.985;
+
+   if(Math.abs(p.vx)<0.04)p.vx=0;
+   if(Math.abs(p.vy)<0.04)p.vy=0;
+
+   if(p.x<38 || p.x>322) p.vx*=-0.85;
+   if(p.y<38 || p.y>322) p.vy*=-0.85;
+
+   p.x=Math.max(38,Math.min(322,p.x));
+   p.y=Math.max(38,Math.min(322,p.y));
+ });
+
+ for(let i=0;i<pieces.length;i++){
+   for(let j=i+1;j<pieces.length;j++){
+     let a=pieces[i],b=pieces[j];
+     let dx=b.x-a.x,dy=b.y-a.y;
+     let d=Math.hypot(dx,dy);
+     let min=a.r+b.r;
+
+     if(d>0 && d<min){
+       let nx=dx/d,ny=dy/d;
+       let overlap=min-d;
+
+       a.x-=nx*overlap/2;
+       a.y-=ny*overlap/2;
+       b.x+=nx*overlap/2;
+       b.y+=ny*overlap/2;
+
+       let rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+
+       if(rel>0){
+         a.vx-=rel*nx;
+         a.vy-=rel*ny;
+         b.vx+=rel*nx;
+         b.vy+=rel*ny;
+       }
+     }
+   }
+ }
+
+ let pockets=[[20,20],[340,20],[20,340],[340,340]];
+
+ for(let i=pieces.length-1;i>=0;i--){
+   let p=pieces[i];
+
+   if(p.type==="striker")continue;
+
+   for(let pocket of pockets){
+     if(Math.hypot(p.x-pocket[0],p.y-pocket[1])<19){
+       pieces.splice(i,1);
+       score++;
+       document.getElementById("score").innerText="Score: "+score;
+       break;
+     }
+   }
+ }
+
+ let moving=pieces.some(p=>Math.abs(p.vx)+Math.abs(p.vy)>0.1);
+
+ if(!moving){
+   striker.x=180;
+   striker.y=310;
+ }
+}
+
+function pos(e){
+ let r=canvas.getBoundingClientRect();
+ return {
+   x:(e.clientX-r.left)*360/r.width,
+   y:(e.clientY-r.top)*360/r.height
+ };
+}
+
+canvas.addEventListener("pointerdown",e=>{
+ let p=pos(e);
+
+ if(Math.hypot(p.x-striker.x,p.y-striker.y)<25){
+   let moving=pieces.some(q=>Math.abs(q.vx)+Math.abs(q.vy)>0.1);
+   if(moving)return;
+   dragging=true;
+   aim=p;
+   canvas.setPointerCapture(e.pointerId);
+ }
+});
+
+canvas.addEventListener("pointermove",e=>{
+ if(dragging) aim=pos(e);
+});
+
+canvas.addEventListener("pointerup",()=>{
+ if(!dragging)return;
+
+ dragging=false;
+
+ striker.vx=Math.max(-12,Math.min(12,(striker.x-aim.x)*0.12));
+ striker.vy=Math.max(-12,Math.min(12,(striker.y-aim.y)*0.12));
+
+ document.getElementById("status").innerText="Playing...";
+});
+
+function loop(){
+ update();
+ requestAnimationFrame(loop);
+}
+
+resetGame();
+draw();
+loop();
+</script>
 
 </body>
 </html>
